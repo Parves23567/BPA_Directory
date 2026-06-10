@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="theme-color" content="#0f2444"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="BPA ডিরেক্টরি"/>
+<meta name="description" content="বাংলাদেশ পুলিশ একাডেমি, সারদা — অফিসার ডিরেক্টরি"/>
+<title>BPA অফিসার ডিরেক্টরি</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --primary:#0f2444;
+  --primary-light:#1a3a6b;
+  --accent:#c9a84c;
+  --bg:#f0f4f8;
+  --card:#ffffff;
+  --text:#1a2332;
+  --text-muted:#5a6a7e;
+  --border:#dde3ec;
+  --green:#1a7a4a;
+  --radius:10px;
+  --shadow:0 2px 8px rgba(15,36,68,.10);
+}
+body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+header{background:var(--primary);color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.header-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.header-logo{width:38px;height:38px;border-radius:50%;border:2px solid var(--accent);object-fit:cover;flex-shrink:0;background:rgba(255,255,255,.1)}
+.header-title h1{font-size:.95rem;font-weight:700;line-height:1.3}
+.header-title p{font-size:.72rem;color:rgba(255,255,255,.65);margin-top:1px}
+.search-wrap{position:relative}
+.search-wrap input{width:100%;padding:9px 38px 9px 14px;border:none;border-radius:8px;background:rgba(255,255,255,.15);color:#fff;font-family:inherit;font-size:.88rem;outline:none;transition:.2s}
+.search-wrap input::placeholder{color:rgba(255,255,255,.5)}
+.search-wrap input:focus{background:rgba(255,255,255,.25)}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer;display:none;line-height:1}
+
+/* FILTER TABS */
+.filter-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 8px;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-btn{display:inline-block;padding:9px 12px;font-family:inherit;font-size:.78rem;font-weight:500;color:var(--text-muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:.2s}
+.filter-btn.active{color:var(--primary);border-bottom-color:var(--accent);font-weight:700}
+
+/* STATS */
+.stats-bar{background:#fff;padding:7px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.stats-bar span{font-size:.76rem;color:var(--text-muted)}
+.stats-bar strong{color:var(--primary)}
+
+/* MAIN */
+main{flex:1;padding:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+/* CARD */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:11px;border:1px solid var(--border);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent))}
+.card-rank{font-size:.65rem;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+.card-name{font-size:.85rem;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:4px}
+.card-dept{font-size:.73rem;color:var(--text-muted);line-height:1.4;margin-bottom:8px;min-height:2.1em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-call{display:flex;align-items:center;justify-content:center;gap:5px;background:var(--green);color:#fff;border:none;border-radius:6px;padding:7px 8px;font-family:inherit;font-size:.78rem;font-weight:600;cursor:pointer;width:100%;text-decoration:none;transition:.15s}
+.card-call:active{opacity:.8;transform:scale(.97)}
+.no-phone{color:var(--text-muted);font-size:.72rem;text-align:center;padding:5px 0}
+
+/* STATE */
+.state-box{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 24px;text-align:center;gap:12px}
+.state-icon{font-size:2.8rem}
+.state-box p{color:var(--text-muted);font-size:.88rem;line-height:1.7}
+.retry-btn{margin-top:4px;padding:8px 22px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer}
+.spinner{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* FOOTER */
+footer{background:var(--primary);color:rgba(255,255,255,.45);text-align:center;padding:12px 16px;font-size:.68rem;line-height:1.9}
+footer strong{color:var(--accent)}
+
+@media(max-width:320px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <img src="police-logo.png" alt="" class="header-logo" onerror="this.style.display='none'"/>
+    <div class="header-title">
+      <h1>BPA অফিসার ডিরেক্টরি</h1>
+      <p>বাংলাদেশ পুলিশ একাডেমি, সারদা</p>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <input type="search" id="searchInput" placeholder="নাম, পদবী বা শাখা লিখুন…" autocomplete="off"/>
+    <button class="search-clear" id="clearBtn" onclick="clearSearch()">✕</button>
+  </div>
+</header>
+
+<div class="filter-bar" id="filterBar"></div>
+
+<div class="stats-bar">
+  <span>দেখাচ্ছে: <strong id="totalCount">—</strong> জন</span>
+  <span id="filterLabel">সকল</span>
+</div>
+
+<main>
+  <div id="stateBox" class="state-box">
+    <div class="spinner"></div>
+    <p>ডেটা লোড হচ্ছে…</p>
+  </div>
+  <div class="grid" id="grid" style="display:none"></div>
+</main>
+
+<footer>
+  <strong>BPA অফিসার ডিরেক্টরি</strong><br/>
+  Powered By — আইসিটি শাখা, বিপিএ, সারদা, রাজশাহী<br/>
+  All Rights Reserved © 2026
+</footer>
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════════
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbx0-T8FQ94EUgihBZW6I5CD2nCcUklvMzDr8hjMkafa2HwBiephme18zFHg36Gls51F/exec';
+// ══════════════════════════════════════════
+
+// Google Sheet কলাম হেডার (স্ক্রিনশট অনুযায়ী)
+const COL = {
+  name:  'নাম',
+  rank:  'পদবী',
+  phone: 'মোবাইল নাম্বার',
+  dept:  'কর্মরত শাখা',
+};
+
+const CACHE_KEY = 'bpa_dir_v1';
+const CACHE_TTL = 30 * 60 * 1000; // ৩০ মিনিট
+
+const RANKS = [
+  {label:'সকল',      value:'all'},
+  {label:'পরিদর্শক', value:'পুলিশ পরিদর্শক'},
+  {label:'এসআই',    value:'এসআই'},
+  {label:'এএসআই',   value:'এএসআই'},
+  {label:'নায়েক',   value:'নায়েক'},
+  {label:'কনস্টেবল',value:'কনস্টেবল'},
+];
+
+let allData = [];
+let activeRank = 'all';
+let searchTerm = '';
+
+// ── LOAD ─────────────────────────────────
+async function loadData() {
+  // ক্যাশ চেক
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (raw) {
+      const {data, ts} = JSON.parse(raw);
+      if (Date.now() - ts < CACHE_TTL && data.length) {
+        allData = data;
+        init();
+        return;
+      }
+    }
+  } catch(_){}
+
+  // নেটওয়ার্ক
+  try {
+    const res = await fetch(SHEET_URL);
+    if (!res.ok) throw new Error();
+    const json = await res.json();
+    allData = Array.isArray(json) ? json : (json.data || []);
+    if (!allData.length) throw new Error('empty');
+    localStorage.setItem(CACHE_KEY, JSON.stringify({data:allData, ts:Date.now()}));
+    init();
+  } catch(_) {
+    showError();
+  }
+}
+
+function init() {
+  buildTabs();
+  applyFilters();
+}
+
+// ── TABS ──────────────────────────────────
+function buildTabs() {
+  const bar = document.getElementById('filterBar');
+  bar.innerHTML = '';
+  RANKS.forEach(({label, value}) => {
+    const count = value === 'all'
+      ? allData.length
+      : allData.filter(r => get(r, COL.rank).includes(value)).length;
+    if (count === 0 && value !== 'all') return;
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (value === activeRank ? ' active' : '');
+    btn.dataset.v = value;
+    btn.textContent = label + ' (' + count + ')';
+    btn.onclick = () => {
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeRank = value;
+      applyFilters();
+    };
+    bar.appendChild(btn);
+  });
+}
+
+// ── FILTER ───────────────────────────────
+function applyFilters() {
+  const q = searchTerm.toLowerCase();
+  const filtered = allData.filter(row => {
+    const name = get(row, COL.name).toLowerCase();
+    const rank = get(row, COL.rank);
+    const dept = get(row, COL.dept).toLowerCase();
+    const matchQ = !q || name.includes(q) || rank.toLowerCase().includes(q) || dept.includes(q);
+    const matchR = activeRank === 'all' || rank.includes(activeRank);
+    return matchQ && matchR;
+  });
+
+  document.getElementById('totalCount').textContent = filtered.length;
+  document.getElementById('filterLabel').textContent =
+    activeRank === 'all' ? 'সকল পদবী' : activeRank;
+
+  const grid = document.getElementById('grid');
+  const box  = document.getElementById('stateBox');
+
+  if (!filtered.length) {
+    grid.style.display = 'none';
+    box.style.display  = 'flex';
+    box.innerHTML = `<div class="state-icon">🔍</div><p>কোনো ফলাফল পাওয়া যায়নি।<br/>ভিন্নভাবে খুঁজুন।</p>`;
+    return;
+  }
+
+  box.style.display  = 'none';
+  grid.style.display = 'grid';
+  grid.innerHTML = filtered.map(cardHTML).join('');
+}
+
+// ── CARD ──────────────────────────────────
+function cardHTML(row) {
+  const name  = esc(get(row, COL.name));
+  const rank  = esc(get(row, COL.rank));
+  const dept  = esc(get(row, COL.dept));
+  const raw   = get(row, COL.phone);
+  // একাধিক নম্বর থাকলে প্রথমটা নাও
+  const phone = raw.split(/[,\/\n]/)[0].replace(/[^0-9+]/g,'');
+
+  const callBtn = phone
+    ? `<a class="card-call" href="tel:${phone}">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.4 2.12 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+        </svg>
+        কল করুন</a>`
+    : `<div class="no-phone">নম্বর নেই</div>`;
+
+  return `<div class="card">
+    <div class="card-rank">${rank}</div>
+    <div class="card-name">${name}</div>
+    <div class="card-dept">${dept||'—'}</div>
+    ${callBtn}
+  </div>`;
+}
+
+// ── ERROR ─────────────────────────────────
+function showError() {
+  const box = document.getElementById('stateBox');
+  box.style.display = 'flex';
+  box.innerHTML = `
+    <div class="state-icon">⚠️</div>
+    <p>ডেটা লোড করা যায়নি।<br/>ইন্টারনেট চেক করে আবার চেষ্টা করুন।</p>
+    <button class="retry-btn" onclick="location.reload()">🔄 আবার চেষ্টা</button>`;
+}
+
+// ── SEARCH ───────────────────────────────
+document.getElementById('searchInput').addEventListener('input', function() {
+  searchTerm = this.value;
+  document.getElementById('clearBtn').style.display = searchTerm ? 'block' : 'none';
+  applyFilters();
+});
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  searchTerm = '';
+  document.getElementById('clearBtn').style.display = 'none';
+  applyFilters();
+}
+
+// ── HELPERS ──────────────────────────────
+function get(row, key) {
+  // হেডার হুবহু না মিললে lowercase দিয়েও চেক
+  return (row[key] ?? row[Object.keys(row).find(k=>k.trim()===key.trim())||''] ?? '').toString().trim();
+}
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── SERVICE WORKER ────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+loadData();
+</script>
+</body>
+</html>
