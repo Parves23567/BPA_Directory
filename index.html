@@ -24,11 +24,13 @@
 body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
 
 /* HEADER */
-header{background:var(--primary);color:#fff;padding:12px 16px 10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
-.header-top{display:flex;align-items:center;gap:10px}
-.header-logo{width:36px;height:36px;border-radius:50%;border:2px solid var(--accent);object-fit:cover;flex-shrink:0}
-.header-title h1{font-size:.93rem;font-weight:700;line-height:1.3}
-.header-title p{font-size:.7rem;color:rgba(255,255,255,.6);margin-top:1px}
+header{background:var(--primary);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 3px 10px rgba(0,0,0,.4);border-bottom:2px solid var(--accent)}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 8px}
+.h-logo{width:48px;height:48px;border-radius:50%;border:2px solid var(--accent);object-fit:cover;flex-shrink:0;background:rgba(255,255,255,.05)}
+.header-center{flex:1;text-align:center;padding:0 8px}
+.header-center h1{font-size:1rem;font-weight:700;line-height:1.3;letter-spacing:.3px}
+.header-center .en{font-size:.7rem;color:var(--accent);font-weight:600;letter-spacing:.8px;margin-top:1px}
+.header-center .sub{font-size:.68rem;color:rgba(255,255,255,.6);margin-top:1px}
 
 /* BACK BAR */
 .back-bar{background:var(--primary-light);padding:7px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.1)}
@@ -151,11 +153,13 @@ footer strong{color:var(--accent)}
 <!-- HEADER -->
 <header>
   <div class="header-top">
-    <img src="police-logo.png" alt="" class="header-logo" onerror="this.style.display='none'"/>
-    <div class="header-title">
-      <h1 id="pageTitle">BPA অফিসার ডিরেক্টরি</h1>
-      <p>বাংলাদেশ পুলিশ একাডেমি, সারদা</p>
+    <img src="police-logo.png" alt="Police Logo" class="h-logo" onerror="this.style.visibility='hidden'"/>
+    <div class="header-center">
+      <h1>বাংলাদেশ পুলিশ একাডেমি</h1>
+      <div class="en">BANGLADESH POLICE ACADEMY</div>
+      <div class="sub" id="pageTitle">সারদা, রাজশাহী</div>
     </div>
+    <img src="bpa-emblem.png" alt="BPA Emblem" class="h-logo" onerror="this.style.visibility='hidden'"/>
   </div>
 </header>
 
@@ -276,14 +280,14 @@ function showHome(){
   pg('homePage').style.display='flex';
   pg('dirPage').style.display='none';
   pg('trainingPage').style.display='none';
-  pg('pageTitle').textContent='BPA অফিসার ডিরেক্টরি';
+  pg('pageTitle').textContent='সারদা, রাজশাহী';
   pg('homeSearch').value='';
 }
 function showDir(q){
   pg('homePage').style.display='none';
   pg('dirPage').style.display='flex';
   pg('trainingPage').style.display='none';
-  pg('pageTitle').textContent='অফিসার ও ফোর্স';
+  pg('pageTitle').textContent='অফিসার ও ফোর্স তালিকা';
   if(!dataLoaded) loadData();
   if(q){pg('searchInput').value=q;searchTerm=q;pg('clearBtn').style.display='block';if(dataLoaded)applyFilters();}
 }
