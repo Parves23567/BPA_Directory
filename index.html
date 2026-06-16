@@ -10,7 +10,13 @@
 <meta name="apple-mobile-web-app-title" content="BPA ডিরেক্টরি"/>
 <meta name="description" content="বাংলাদেশ পুলিশ একাডেমি, সারদা — অফিসার ডিরেক্টরি"/>
 <title>BPA অফিসার ডিরেক্টরি</title>
+<!-- manifest.json must include: "icons":[{"src":"police-logo.png","sizes":"192x192","type":"image/png"},{"src":"bpa-emblem.png","sizes":"512x512","type":"image/png"}] -->
 <link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="police-logo.png"/>
+<link rel="apple-touch-icon" sizes="192x192" href="police-logo.png"/>
+<link rel="apple-touch-icon" sizes="512x512" href="bpa-emblem.png"/>
+<link rel="icon" type="image/png" href="police-logo.png"/>
+<meta name="msapplication-TileImage" content="police-logo.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
@@ -353,6 +359,19 @@ function clearSearch(){pg('searchInput').value='';searchTerm='';pg('clearBtn').s
 function get(row,key){return(row[key]??row[Object.keys(row).find(k=>k.trim()===key.trim())||'']??'').toString().trim();}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+// ── PWA Hardware Back Button Support ──
+function pushState(page){history.pushState({page},'')}
+const _showHome=showHome,_showDir=showDir,_showTraining=showTraining;
+showHome=function(){_showHome();history.replaceState({page:'home'},'');};
+showDir=function(q){_showDir(q);pushState('dir');};
+showTraining=function(){_showTraining();pushState('training');};
+window.addEventListener('popstate',function(e){
+  const page=(e.state&&e.state.page)||'home';
+  if(page==='home'){_showHome();history.replaceState({page:'home'},'');}
+  else if(page==='dir'){_showDir();}
+  else if(page==='training'){_showTraining();}
+});
 showHome();
 </script>
 </body>
