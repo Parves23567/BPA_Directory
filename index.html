@@ -256,7 +256,7 @@ footer strong{color:var(--accent)}
 <script>
 var SHEET_URL='https://script.google.com/macros/s/AKfycbx0-T8FQ94EUgihBZW6I5CD2nCcUklvMzDr8hjMkafa2HwBiephme18zFHg36Gls51F/exec';
 var COL={name:'নাম',rank:'পদবী',phone:'মোবাইল নাম্বার',dept:'কর্মরত শাখা'};
-var CACHE_KEY='bpa_v18';
+var CACHE_KEY='bpa_v19';
 var CACHE_TTL=30*60*1000;
 
 var RANKS=[
@@ -294,7 +294,7 @@ function matchRank(rk, key) {
   if (key === 'asi_sa') {
     return r.indexOf('এএসআই') !== -1 && r.indexOf('সঃ') !== -1;
   }
-  if (key === 'nayek') return r.indexOf('নাযেক') !== -1 || r.indexOf('নায়েক') !== -1;
+  if (key === 'nayek') return r.indexOf('েক') !== -1 && r.indexOf('না') !== -1 && r.indexOf('কন') === -1 && r.indexOf('পরি') === -1 && r.indexOf('সার্জ') === -1 && r.indexOf('তালিকা') === -1;
   if (key === 'constable') {
     return r.indexOf('কনস্টেবল') !== -1 || r.indexOf('কং') !== -1;
   }
