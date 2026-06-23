@@ -80,6 +80,13 @@ header{background:var(--primary);color:#fff;position:sticky;top:0;z-index:100;bo
 .card-call{display:flex;align-items:center;justify-content:center;gap:5px;background:var(--green);color:#fff;border:none;border-radius:6px;padding:7px 8px;font-family:inherit;font-size:.77rem;font-weight:600;cursor:pointer;width:100%;text-decoration:none}
 .card-call:active{opacity:.8}
 .card-phone{font-size:.75rem;color:var(--primary);font-weight:600;text-align:center;margin-bottom:6px;background:var(--bg);border-radius:5px;padding:4px 6px;border:1px solid var(--border)}
+.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px}
+.btn-copy{display:flex;align-items:center;justify-content:center;gap:4px;background:var(--bg);color:var(--primary);border:1px solid var(--border);border-radius:6px;padding:6px 4px;font-family:inherit;font-size:.72rem;font-weight:600;cursor:pointer;width:100%}
+.btn-copy:active{background:var(--border)}
+.btn-share{display:flex;align-items:center;justify-content:center;gap:4px;background:#1565C0;color:#fff;border:none;border-radius:6px;padding:6px 4px;font-family:inherit;font-size:.72rem;font-weight:600;cursor:pointer;width:100%}
+.btn-share:active{opacity:.8}
+.copy-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 18px;border-radius:20px;font-size:.78rem;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.copy-toast.show{opacity:1}
 .no-phone{color:var(--text-muted);font-size:.71rem;text-align:center;padding:5px 0}
 .state-box{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:10px;color:var(--text-muted);font-size:.85rem;text-align:center}
 .rank-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px}
@@ -231,7 +238,7 @@ footer strong{color:var(--accent)}
         <div class="c-item"><div class="c-num">৩</div><div class="c-info"><div class="c-name">Cadet Sub Inspector (42nd Batch)</div><div class="c-date">০৮/০৭/২০২৫ → ০৭/০৭/২০২৬</div><div class="c-tags"><span class="c-tag green-t">Sub Inspector</span><span class="c-tag">৫০৫ জন</span></div></div></div>
         <div class="c-item"><div class="c-num">৪</div><div class="c-info"><div class="c-name">Cadet Sub Inspector 43rd Batch-2006</div><div class="c-date">২০/০৪/২০২৬ → ২০/১০/২০২৬</div><div class="c-tags"><span class="c-tag green-t">Sub Inspector</span><span class="c-tag">১৬৮ জন</span></div></div></div>
         <div class="c-item"><div class="c-num">৫</div><div class="c-info"><div class="c-name">27th Sergeant Batch-2006</div><div class="c-date">৩০/০৪/২০২৬ → ২৯/১০/২০২৬</div><div class="c-tags"><span class="c-tag purple-t">Sergeant</span><span class="c-tag">৮৪ জন</span></div></div></div>
-        <div class="c-item"><div class="c-num">৬</div><div class="c-info"><div class="c-name">148th Section Leader Course 2026</div><div class="c-date">৩১/০৩/২০২৬ → ২০/০৭/২০২৬</div><div class="c-tags"><span class="c-tag orange-t">ASI (AB)</span><span class="c-tag">১০৬ জন</span></div></div></div>
+        <div class="c-item"><div class="c-num">৬</div><div class="c-info"><div class="c-name">148th Section Leader Course 2026</div><div class="c-date">৩১/০৩/২০২৬ → ৩০/০৭/২০২৬</div><div class="c-tags"><span class="c-tag orange-t">ASI (AB)</span><span class="c-tag">১০৬ জন</span></div></div></div>
         <div class="c-item"><div class="c-num">৭</div><div class="c-info"><div class="c-name">Crisis Response Team (CRT) Course</div><div class="c-date">১৭/০৫/২০২৬ → ২০/০৬/২০২৬</div><div class="c-tags"><span class="c-tag teal-t">SI to Downwards</span><span class="c-tag">২০ জন</span></div></div></div>
       </div>
       <div class="c-footer">মোট চলমান কোর্স: <strong>৭</strong> &nbsp;|&nbsp; মোট প্রশিক্ষণার্থী: <strong>৯৯৭</strong></div>
@@ -244,10 +251,12 @@ footer strong{color:var(--accent)}
   Powered By — আইসিটি শাখা, বিপিএ, সারদা, রাজশাহী &nbsp;|&nbsp; All Rights Reserved &copy; 2026
 </footer>
 
+<div class="copy-toast" id="copyToast">✓ নম্বর কপি হয়েছে</div>
+
 <script>
 var SHEET_URL='https://script.google.com/macros/s/AKfycbx0-T8FQ94EUgihBZW6I5CD2nCcUklvMzDr8hjMkafa2HwBiephme18zFHg36Gls51F/exec';
 var COL={name:'নাম',rank:'পদবী',phone:'মোবাইল নাম্বার',dept:'কর্মরত শাখা'};
-var CACHE_KEY='bpa_v16';
+var CACHE_KEY='bpa_v18';
 var CACHE_TTL=30*60*1000;
 
 var RANKS=[
@@ -577,7 +586,12 @@ function applyFilters() {
     var phone = rawPhone.split(/[,\/\n]/)[0].replace(/[^0-9+]/g, '');
     var phoneDisplay = esc(rawPhone.split(/[,\/\n]/)[0].trim());
     var btn = phone
-      ? '<div class="card-phone">📞 ' + phoneDisplay + '</div><a class="card-call" href="tel:' + phone + '">কল করুন</a>'
+      ? '<div class="card-phone">📞 ' + phoneDisplay + '</div>'
+        + '<a class="card-call" href="tel:' + phone + '">📞 কল করুন</a>'
+        + '<div class="card-actions">'
+        + '<button class="btn-copy" onclick="copyNum(\'' + phone + '\',event)">📋 কপি</button>'
+        + '<button class="btn-share" onclick="shareContact(\'' + name + '\',\'' + rank + '\',\'' + phone + '\',event)">🔗 শেয়ার</button>'
+        + '</div>'
       : '<div class="no-phone">নম্বর নেই</div>';
     return '<div class="card"><div class="card-rank">' + rank + '</div><div class="card-name">' + name + '</div><div class="card-dept">' + (dept||'—') + '</div>' + btn + '</div>';
   }).join('');
@@ -621,6 +635,37 @@ function debugFirstRow() {
 
 function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyNum(phone, e) {
+  e.preventDefault();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(phone).then(function(){ showToast(); });
+  } else {
+    var el = document.createElement('textarea');
+    el.value = phone;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast();
+  }
+}
+
+function shareContact(name, rank, phone, e) {
+  e.preventDefault();
+  var text = rank + '\n' + name + '\nমোবাইল: ' + phone;
+  if (navigator.share) {
+    navigator.share({ title: 'BPA অফিসার', text: text });
+  } else {
+    copyNum(phone, e);
+  }
+}
+
+function showToast() {
+  var t = pg('copyToast');
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2000);
 }
 
 if ('serviceWorker' in navigator) {
